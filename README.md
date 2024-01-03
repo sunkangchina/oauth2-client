@@ -1,5 +1,12 @@
 # OAuth 2.0 Client
 
+## composer.json
+
+~~~
+"helophp/oauth2-client": "^2" 
+~~~
+
+
 ## 支持京东oauth2非标准返回值
 
 ~~~

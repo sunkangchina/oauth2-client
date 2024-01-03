@@ -737,6 +737,7 @@ abstract class AbstractProvider
      */
     protected function parseJson($content)
     {
+        $this->beforeParseJson($content);
         $content = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -745,7 +746,12 @@ abstract class AbstractProvider
                 json_last_error_msg()
             ));
         }
-
+        $ln = $this->ln; 
+        if(!$content['access_token']&&$content[$ln['access_token']]){
+            foreach ($ln as $k=>$k1){
+                $content[$k] = $content[$k1];
+            }
+        }
         return $content;
     }
 
@@ -938,4 +944,34 @@ abstract class AbstractProvider
 
         return $this->getDefaultHeaders();
     }
+    /**
+    * 映射字段
+    */
+    protected $ln = [];
+    /**
+    * 设置映射字段
+    * $provider->setLn([
+    *     'access_token'=>'accessToken',    
+    *     'expires'=>'accessExpire',  
+    *     'refresh_token'=>'refreshToken',  
+    *     'refresh_expire'=>'refreshExpire',  
+    * ]);
+    * $accessToken = $provider->getAccessToken('authorization_code', [
+    *     'code' => $_GET['code']
+    * ]);
+    */
+    public function setLn($ln){
+        $this->ln = $ln;
+    }
+    /**
+    * 处理有些接口返回的不是标准JSON的问题。
+    * 如京东oauth2非标准返回值，返回的数据是 "{}" 这种错误格式，此种情况需要单独处理
+    */
+    public function beforeParseJson(&$content){
+        if(substr($content,0,1) == '"' && substr($content,-1)=='"'){
+            $content = substr($content,1,-1);
+            $content =  stripslashes($content);
+        } 
+    }
+
 }

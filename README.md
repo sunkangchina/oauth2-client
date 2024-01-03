@@ -1,5 +1,27 @@
 # OAuth 2.0 Client
 
+## 支持京东oauth2非标准返回值
+
+~~~
+$provider->setPkceCode($_SESSION['oauth2pkceCode']);  
+$provider->setLn([
+    'access_token'=>'accessToken',    
+    'expires'=>'accessExpire',  
+    'refresh_token'=>'refreshToken',  
+    'refresh_expire'=>'refreshExpire',  
+]);
+$accessToken = $provider->getAccessToken('authorization_code', [
+    'code' => $_GET['code']
+]);
+~~~
+
+也可以在`getAccessToken`前对方法进行优化
+~~~
+$provider->beforeParseJson(&$content);
+~~~
+
+## 原包信息
+
 This package provides a base for integrating with [OAuth 2.0](http://oauth.net/2/) service providers.
 
 [![Gitter Chat](https://img.shields.io/badge/gitter-join_chat-brightgreen.svg?style=flat-square)](https://gitter.im/thephpleague/oauth2-client)

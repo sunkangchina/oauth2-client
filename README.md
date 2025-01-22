@@ -3,7 +3,7 @@
 ## composer.json
 
 ~~~
-"helophp/oauth2-client": "^2" 
+"sunkangchina/oauth2-client": "^2" 
 ~~~
 
 
